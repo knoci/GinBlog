@@ -1,0 +1,25 @@
+# yaml 配置
+services:
+  mysql:
+    image: "oilrmutp57/mysql5.7:1.1"
+    ports:
+      - "3306:3306"
+    command: "--default-authentication-plugin=mysql_native_password --init-file /data/application/init.sql"
+    environment:
+      MYSQL_ROOT_PASSWORD: "123"
+      MYSQL_DATABASE: "ginblog"
+      MYSQL_PASSWORD: "123"
+    volumes:
+      - ./init.sql:/data/application/init.sql
+  redis:
+    image: "redis:7.4.1"
+    ports:
+      - "6379:6379"
+  ginblog:
+    build: .
+    command: sh -c "./wait-for.sh mysql:3306 redis:6379 -- ./ginblog ./config/config.yaml"
+    depends_on:
+      - mysql
+      - redis
+    ports:
+      - "8808:8808"
