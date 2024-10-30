@@ -55,7 +55,7 @@ func GetPostVoteData(ids []string) (data []int64, err error){
 	pipeline := client.Pipeline()
 	for _, id := range ids {
 		key := getRedisKey(KeyPostVotedZSetPF+id)
-		pipeline.ZCount(ctx, key, "1", "1")
+		pipeline.ZCount(ctx, key, "1", "999")
 	}
 	cmders, err := pipeline.Exec(ctx)
 	if err != nil {
